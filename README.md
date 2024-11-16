@@ -7,7 +7,8 @@
 ## UML图
 
 参考了往届师兄改进版本的UML图
-<img src="https://www.example.com/image.jpg" alt="Image" width="500" height="300">
+
+<img src="UML.png" alt="Image" width="500" height="400">
 
 
 ## 主要功能
