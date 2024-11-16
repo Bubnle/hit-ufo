@@ -4,6 +4,12 @@
 
 这是一个简单的 Unity UFO 游戏项目，旨在展示如何使用 Unity GUI 系统显示文本和按钮，控制 UFO 动作，并进行简单的用户交互。该游戏涉及得分、游戏模式选择和飞行模式的切换。
 
+## UML图
+
+参考了往届师兄改进版本的UML图
+<img src="https://www.example.com/image.jpg" alt="Image" width="500" height="300">
+
+
 ## 主要功能
 
 - **显示文本**：通过 GUI 在屏幕上显示得分、消息和其他信息。
@@ -142,7 +148,99 @@ void Update()
     delete.Clear();
 }
 ```
+以下是今天的内容总结，以富文本格式呈现：
 
+---
+
+### **单例模式的实现**
+
+**单例模式**确保某个类只有一个实例，并提供一个全局访问点。为了实现单例模式，你需要：
+
+- **创建一个通用的单例类**，可以为任何类型提供单例实例。
+  
+  ```csharp
+  public class Singleton<T> where T : class, new()
+  {
+      private static T instance;
+
+      private Singleton() { }
+
+      public static T Instance
+      {
+          get
+          {
+              if (instance == null)
+              {
+                  instance = new T();
+              }
+              return instance;
+          }
+      }
+  }
+  ```
+
+- **使用单例类**：通过 `Singleton<T>.Instance` 获取单例实例。
+
+---
+
+###  实现 `IActionManager` 接口与单例结合
+
+当你需要实现接口 `IActionManager` 并且使用单例时，可以这样操作：
+
+- **实现接口**，例如 `Fly` 方法。
+- **继承单例类**，确保 `CCActionManager` 只有一个实例。
+
+示例代码：
+
+```csharp
+public interface IActionManager
+{
+    void Fly(GameObject ufo, float speed, Vector3 direction);
+}
+
+public class CCActionManager : Singleton<CCActionManager>, IActionManager
+{
+    public void Fly(GameObject ufo, float speed, Vector3 direction)
+    {
+        // 飞行逻辑实现
+        Debug.Log("Flying UFO with speed: " + speed);
+        ufo.transform.Translate(direction * speed * Time.deltaTime);
+    }
+}
+```
+
+---
+
+### **使用单例实例**
+
+在其他类中，你可以通过 `Singleton<CCActionManager>.Instance` 来访问单例实例，并调用其方法：
+
+```csharp
+public class SomeOtherClass : MonoBehaviour
+{
+    private void Start()
+    {
+        // 获取CCActionManager的单例实例
+        IActionManager actionManager = Singleton<CCActionManager>.Instance;
+
+        // 使用接口方法
+        GameObject ufo = new GameObject(); // 假设这是一个UFO游戏对象
+        actionManager.Fly(ufo, 10f, Vector3.forward); // 假设飞行的速度是10，方向是前方
+    }
+}
+```
+
+---
+
+### **总结**
+
+1. **单例模式**：确保一个类只有一个实例，并提供全局访问。
+2. **接口实现与单例结合**：实现接口并继承单例类，以确保接口方法可以通过单例实例访问。
+3. **通过 `Singleton<T>.Instance` 使用单例**：无需担心实例化，直接通过单例访问类的功能。
+
+---
+
+如果有任何问题，欢迎继续提问！
 ## 游戏模式
 
 - **普通模式**：玩家击中 UFO 进行得分。
@@ -162,3 +260,6 @@ void Update()
 3. 点击播放按钮运行游戏并进行测试。
 
 ## 也感谢师兄的帮助！
+
+## 视频链接
+
